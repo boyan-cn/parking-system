@@ -1,0 +1,159 @@
+# 生产环境 Docker Compose 配置
+version: '3.8'
+
+services:
+  # MySQL 数据库
+  mysql:
+    image: mysql:8.0
+    container_name: parking-mysql-prod
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      TZ: Asia/Shanghai
+    volumes:
+      - mysql_data_prod:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./mysql/conf.d:/etc/mysql/conf.d:ro
+    networks:
+      - parking-network
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --innodb-buffer-pool-size=512M
+      --max-connections=200
+      --innodb-log-file-size=256M
+      --slow-query-log=1
+      --long-query-time=2
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD}"]
+      timeout: 20s
+      retries: 10
+      interval: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+
+  # 后端服务
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    container_name: parking-server-prod
+    restart: unless-stopped
+    environment:
+      DB_HOST: mysql
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      JWT_SECRET: ${JWT_SECRET}
+      PORT: 5000
+      NODE_ENV: production
+      TZ: Asia/Shanghai
+    volumes:
+      - ./server/uploads:/app/uploads
+      - ./logs:/app/logs
+    networks:
+      - parking-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "/app/healthcheck.js"]
+      timeout: 10s
+      retries: 3
+      interval: 30s
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  # 前端服务
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    container_name: parking-client-prod
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - parking-network
+    depends_on:
+      server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      timeout: 10s
+      retries: 3
+      interval: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
+
+  # Redis 缓存 (可选)
+  redis:
+    image: redis:7-alpine
+    container_name: parking-redis-prod
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data_prod:/data
+    networks:
+      - parking-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      timeout: 3s
+      retries: 5
+      interval: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 64M
+
+volumes:
+  mysql_data_prod:
+    driver: local
+  redis_data_prod:
+    driver: local
+
+networks:
+  parking-network:
+    driver: bridge

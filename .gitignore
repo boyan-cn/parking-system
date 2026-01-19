@@ -1,0 +1,94 @@
+# 依赖文件
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 环境变量和敏感配置
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 构建输出
+build/
+dist/
+*.tgz
+*.tar.gz
+
+# 日志文件
+logs/
+*.log
+
+# 运行时文件
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# 上传文件（包含用户数据）
+server/uploads/
+uploads/
+
+# 数据库文件
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE 和编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker
+.dockerignore
+
+# 临时文件
+tmp/
+temp/
+
+# 测试覆盖率
+coverage/
+.nyc_output/
+
+# 缓存
+.cache/
+.parcel-cache/
+
+# 备份文件
+backups/
+*.backup
+*.bak
+
+# 本地配置文件
+config/local.js
+config/local.json
+
+# 证书文件
+*.pem
+*.key
+*.crt
+
+# 压缩文件
+*.zip
+*.rar
+*.7z
+
+# Windows 批处理文件（可能包含敏感信息）
+*.bat
+
+# 开发脚本（可能包含本地路径）
+dev-start.bat
+start.bat

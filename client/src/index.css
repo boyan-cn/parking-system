@@ -1,0 +1,100 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.ant-layout {
+  min-height: 100vh;
+}
+
+.logo {
+  height: 32px;
+  margin: 16px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  .ant-card {
+    margin: 8px !important;
+  }
+  
+  .ant-card-body {
+    padding: 16px !important;
+  }
+  
+  .ant-table-wrapper {
+    overflow-x: auto;
+  }
+  
+  .ant-descriptions-item-label {
+    font-weight: bold;
+    color: #666;
+  }
+  
+  .ant-modal {
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+  
+  .ant-modal-content {
+    border-radius: 8px 8px 0 0 !important;
+  }
+  
+  /* 触摸友好的按钮 */
+  .ant-btn-lg {
+    min-height: 44px;
+  }
+  
+  /* 输入框优化 */
+  .ant-input-lg, .ant-input-password-lg {
+    min-height: 44px;
+  }
+  
+  /* 表格在移动端隐藏 */
+  .mobile-hidden {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .desktop-hidden {
+    display: none;
+  }
+}
+
+/* 移动端卡片样式 */
+.mobile-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 触摸优化 */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 响应式图片 */
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+}

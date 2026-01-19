@@ -1,0 +1,83 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x]
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: test_password
+          MYSQL_DATABASE: community_parking_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd client && npm ci
+        cd ../server && npm ci
+
+    - name: Setup test database
+      run: |
+        mysql -h 127.0.0.1 -u root -ptest_password community_parking_test < database/init.sql
+
+    - name: Run server tests
+      run: |
+        cd server
+        npm test
+      env:
+        DB_HOST: 127.0.0.1
+        DB_USER: root
+        DB_PASSWORD: test_password
+        DB_NAME: community_parking_test
+        JWT_SECRET: test_jwt_secret
+
+    - name: Run client tests
+      run: |
+        cd client
+        npm test -- --coverage --watchAll=false
+
+    - name: Build client
+      run: |
+        cd client
+        npm run build
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Test Docker build
+      run: |
+        docker-compose build
+        docker-compose config
