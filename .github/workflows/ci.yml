@@ -54,6 +54,7 @@ jobs:
         DB_PASSWORD: test_password
         DB_NAME: community_parking_test
         JWT_SECRET: test_jwt_secret
+        PORT: 8080
 
     - name: Run client tests
       run: |

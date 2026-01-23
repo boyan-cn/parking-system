@@ -20,7 +20,7 @@ COPY healthcheck.js ./
 RUN mkdir -p uploads logs
 
 # 暴露端口
-EXPOSE 5000
+EXPOSE 8080
 
 # 启动应用
 CMD ["npm", "start"]

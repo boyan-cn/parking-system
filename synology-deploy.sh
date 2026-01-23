@@ -92,18 +92,18 @@ fi
 
 # 检查端口占用
 echo "🔍 检查端口占用..."
-PORTS=(80 5000 3306)
+PORTS=(80 8080 3306)
 for port in "${PORTS[@]}"; do
     if netstat -tuln | grep ":$port " > /dev/null; then
         echo "⚠️  端口 $port 已被占用"
         case $port in
             80)
-                echo "   建议修改前端端口为 8080"
-                sed -i 's/"80:80"/"8080:80"/g' docker-compose.yml
+                echo "   建议修改前端端口为 8081"
+                sed -i 's/"80:80"/"8081:80"/g' docker-compose.yml
                 ;;
-            5000)
-                echo "   建议修改后端端口为 5001"
-                sed -i 's/"5000:5000"/"5001:5000"/g' docker-compose.yml
+            8080)
+                echo "   建议修改后端端口为 8081"
+                sed -i 's/"8080:8080"/"8081:8080"/g' docker-compose.yml
                 ;;
             3306)
                 echo "   建议修改数据库端口为 3307"
@@ -149,7 +149,7 @@ docker-compose ps
 # 健康检查
 echo "🏥 执行健康检查..."
 FRONTEND_PORT=$(docker-compose port client 80 2>/dev/null | cut -d: -f2)
-BACKEND_PORT=$(docker-compose port server 5000 2>/dev/null | cut -d: -f2)
+BACKEND_PORT=$(docker-compose port server 8080 2>/dev/null | cut -d: -f2)
 
 if [ -n "$FRONTEND_PORT" ]; then
     if curl -s http://localhost:$FRONTEND_PORT > /dev/null; then
@@ -176,7 +176,7 @@ echo "🎉 部署完成！"
 echo "================================"
 echo "📱 访问信息:"
 echo "   前端地址: http://$SYNOLOGY_IP:${FRONTEND_PORT:-80}"
-echo "   后端API:  http://$SYNOLOGY_IP:${BACKEND_PORT:-5000}/api"
+echo "   后端API:  http://$SYNOLOGY_IP:${BACKEND_PORT:-8080}/api"
 echo ""
 echo "🔐 默认管理员账号:"
 echo "   用户名: admin"

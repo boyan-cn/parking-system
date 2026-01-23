@@ -50,8 +50,8 @@ CREATE TABLE IF NOT EXISTS violation_records (
 -- 创建管理员用户（密码：admin123）
 INSERT INTO users (username, password, phone, building_number, unit_number) VALUES
 ('admin', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '13900139001', '管理', '001'),
-('zhangsan', '$2a$10$jLn1W4Nve5w9HzP0CGHDk.5g6oM1nZmVdnDZc8CLLx0CD0z/gZii6', '13900139001', '管理', '001'),
-('yanbo', '$2b$10$bm6jgaEgxKem9L8Kb1CH4OCI3hepKKIyAGPeFE1g67DIoujqziiMe', '13915596329', '管理', '001')
+('zhangsan', '$2a$10$jLn1W4Nve5w9HzP0CGHDk.5g6oM1nZmVdnDZc8CLLx0CD0z/gZii6', '13900139001', '管理', '002'),
+('yanbo', '$2b$10$bm6jgaEgxKem9L8Kb1CH4OCI3hepKKIyAGPeFE1g67DIoujqziiMe', '13915596329', '管理', '003')
 ON DUPLICATE KEY UPDATE 
   phone = VALUES(phone),
   building_number = VALUES(building_number),

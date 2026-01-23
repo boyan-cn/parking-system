@@ -98,7 +98,7 @@ docker-compose exec mysql mysql -u root -p
 
 默认端口：
 - 前端：80
-- 后端：5000  
+- 后端：8080  
 - 数据库：3306
 
 如需修改，编辑 `docker-compose.yml`：
@@ -106,7 +106,7 @@ docker-compose exec mysql mysql -u root -p
 services:
   client:
     ports:
-      - "8080:80"  # 改为 8080 端口
+      - "8081:80"  # 改为 8081 端口
 ```
 
 ## 故障排除

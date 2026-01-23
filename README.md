@@ -163,13 +163,13 @@ DB_NAME=community_parking
 JWT_SECRET=your_jwt_secret_key
 
 # 服务器配置
-PORT=5000
+PORT=8080
 ```
 
 #### 客户端环境变量 (client/.env)
 ```env
 # API 地址
-REACT_APP_API_URL=http://localhost:5000
+REACT_APP_API_URL=http://localhost:8080
 ```
 
 ### 数据库配置
@@ -311,5 +311,6 @@ REACT_APP_API_URL=http://localhost:5000
 
 ---
 
-⭐ 如果这个项目对你有帮助，请给个 Star！#   p a r k i n g - s y s t e m  
+⭐ 如果这个项目对你有帮助，请给个 Star！#   p a r k i n g - s y s t e m 
+ 
  
