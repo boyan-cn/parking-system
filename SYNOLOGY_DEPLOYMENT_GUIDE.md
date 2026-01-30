@@ -224,6 +224,12 @@ services:
 
 # 更新系统
 ./manage.sh update
+
+# 健康检查
+./manage.sh health
+
+# 查看所有可用命令
+./manage.sh help
 ```
 
 ### 手动管理命令
